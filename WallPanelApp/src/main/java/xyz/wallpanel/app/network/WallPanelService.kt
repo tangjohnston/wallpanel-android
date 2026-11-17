@@ -244,6 +244,14 @@ class WallPanelService : LifecycleService(), MQTTModule.MQTTListener {
                 state.put(MqttUtils.STATE_SCREEN_ON, isScreenOn)
                 state.put(MqttUtils.STATE_CAMERA, configuration.cameraEnabled)
                 state.put(MqttUtils.STATE_BRIGHTNESS, screenUtils.getCurrentScreenBrightness())
+                // Battery over HTTP (no MQTT needed) for HA REST-sensor polling of /api/state.
+                val batteryStatus = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+                val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, 100) ?: 100
+                val batteryStatusInt = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+                state.put("battery", if (level >= 0 && scale > 0) level * 100 / scale else -1)
+                state.put("charging", batteryStatusInt == BatteryManager.BATTERY_STATUS_CHARGING ||
+                        batteryStatusInt == BatteryManager.BATTERY_STATUS_FULL)
             } catch (e: JSONException) {
                 e.printStackTrace()
             }

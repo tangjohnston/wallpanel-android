@@ -110,6 +110,16 @@ class BrowserActivityNative : BaseBrowserActivity(), LifecycleObserver, WebClien
             configuration.isFirstTime = false
             configuration.settingsCode = BuildConfig.CODE.toString()
             configuration.hasClockScreenSaver = true
+            // Enable the REST command server so Home Assistant can push dashboard switches
+            // (e.g. doorbell view) to the tablet over HTTP on the default port (2971).
+            configuration.setHttpRestEnabled(true)
+            // Once a broker is configured, turn on MQTT + sensors + HA discovery so the
+            // battery sensor publishes (for the HA charge-cycle automation).
+            if (BuildConfig.BROKER.isNotBlank()) {
+                configuration.setMqttEnabled(true)
+                configuration.setSensorsEnabled(true)
+                configuration.setMqttDiscovery(true)
+            }
         }
 
         binding = ActivityBrowserBinding.inflate(layoutInflater)

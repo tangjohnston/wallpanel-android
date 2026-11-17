@@ -180,6 +180,22 @@ constructor(private val context: Context, private val sharedPreferences: SharedP
         sharedPreferences.edit().putBoolean(context.getString(R.string.key_setting_http_mjpegenabled), value!!).apply()
     }
 
+    fun setHttpRestEnabled(value: Boolean?) {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.key_setting_http_restenabled), value!!).apply()
+    }
+
+    fun setMqttEnabled(value: Boolean) {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.key_setting_mqtt_enabled), value).apply()
+    }
+
+    fun setSensorsEnabled(value: Boolean) {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.key_setting_sensors_enabled), value).apply()
+    }
+
+    fun setMqttDiscovery(value: Boolean) {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.key_setting_mqtt_discovery), value).apply()
+    }
+
     val httpMJPEGMaxStreams: Int
         get() = getStringPref(R.string.key_setting_http_mjpegmaxstreams, R.string.default_setting_http_mjpegmaxstreams).trim().toInt()
 
